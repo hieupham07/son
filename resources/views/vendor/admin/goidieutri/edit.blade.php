@@ -1,319 +1,198 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="box box-danger">
-            <form action="/admin/quote/{{$order->id}}" method="PUT" id="create-order-form">
-                <div class="col-md-12">
-                    <div class="form-group col-md-6 col-lg-3 col-xs-12" style="margin-left: -15px !important;">
-                        <label class="control-label no-padding-right" for="customerId">Khách hàng
-                        </label>
-                        <div class="clearfix">
-                            <select name="customerId" class="form-control" id="customerId">
-                                <option value="{{$order->causer->id}}" selected="selected">{{$order->causer->name}}</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="form-group col-md-6 col-lg-2 col-xs-12">
-                        <label class="control-label no-padding-right" for="orderDate">Mã đơn </label>
-                        <div class="clearfix">
-                            <input placeholder="Mã đơn" name="orderCode" value="{{ old('orderCode', $order->invoice_no) }}" id="orderCode" class="form-control" type="text" readonly>
-                        </div>
-                    </div>
 
-                    <div class="form-group col-md-6 col-lg-2 col-xs-12">
-                        <label class="control-label no-padding-right" for="orderDate"> Ngày </label>
-                        <div class="clearfix">
-                            <input placeholder="Ngày" name="orderDate" value="{{ old('orderDate', date_format(date_create($order->order_date),"Y-m-d")) }}"
-                                   id="orderDate" class="form-control" type="date">
-                        </div>
-                    </div>
+<div class="themgoidieutri clearfix" style="background: #fff;">
+    <div class="box-header with-border">
+        <h3 class="box-title">Sửa Gói Điều Trị</h3>
 
-                    <div class="col-md-6 col-lg-2 col-sm-12 col-xs-12 form-group">
-                        <label class="control-label no-padding-right" for="employeeId">Người tạo</label>
-                        <div class="clearfix">
-                            <select name="created_by" class="form-control" id="created_by">
-                                <option value="">-- Tất cả --</option>
-                                @foreach($users as $loc)
-                                        <option value="{{ $loc->id }}" @if($loc->id == old('created_by', $order->created_by)) selected @endif>{{ $loc->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <div class="form-group" style="overflow: hidden">
-                        <label class="control-label no-padding-right">Sản phẩm</label>
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-barcode"></i></span>
-                            <select name="select-product" class="form-control" id="select-product">
-                                <option value="">-- Chọn sản phẩm --</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12">
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="products_table">
-                            <thead>
-                            <tr>
-                                <th width="25%">Sản phẩm</th>
-                                <th width="5%">ĐVT</th>
-                                <th width="7%">Số lượng</th>
-                                <th width="6%">Đơn giá</th>
-                                <th width="7%">% Chiết khấu</th>
-                                <th width="7%">Tiền Chiết khấu</th>
-                                <th width="7%">Thành tiền</th>
-                                <th width="10%">Ghi chú</th>
-                                <th width="2%"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($order->details as $k => $ord)
-
-                                <tr class="{{$ord->id}}">
-                                    <td><a href="#">{{$ord->product->code}} / {{$ord->product->name}}
-                                            <i class="fa fa-info-circle"></i></a>
-                                        <input type="hidden" name="products[{{$ord->id}}][product_id]" value="{{$ord->product_id}}" />
-                                    </td>
-                                    <td>{{$ord->unit}}</td>
-                                    <td class="qty" width="10%">
-                                        <input type="number" name="products[{{$ord->id}}][qty]" class="form-control qty" value="{{$ord->qty}}" min="0"/>
-                                    </td>
-                                    <td class="price" width="10%">
-                                        <input type="text" name="products[{{$ord->id}}][price]" value="{{$ord->price}}" class="form-control price"/>
-                                    </td>
-                                    <td class=""><input type="number" name="products[{{$ord->id}}][f_discount]" value="{{$ord->f_discount}}" min="0" max="100" class="form-control f-discount" /></td>
-                                    <td class=""><input type="number" name="products[{{$ord->id}}][m_discount]" value="{{$ord->m_discount}}" min="0" class="form-control m-discount" /></td>
-                                    <td class="total">
-                                        <span>{{$ord->m_total }}</span>
-                                        <input type="hidden" name="products[{{$ord->id}}][total]" value="{{$ord->m_total}}" />
-                                    </td>
-                                    <td class=""><input type="text" name="products[{{$ord->id}}][description]" value="{{$ord->description}}" class=""></input></td>
-                                    <td><a href="#" class="btn btn-sm btn-danger remove-row"><i class="fa fa-minus-circle"></i></a></td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <hr>
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="control-label no-padding-right" for="discount">Ghi chú</label>
-                                <textarea class="form-control" name="desc" rows="4">{{$order->description}}</textarea>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-sm-4 no-padding-right" for="discount">Giảm giá</label>
-                                <div class="col-sm-4">
-
-                                    <select name="discountType" class="form-control discountType">
-                                        <option value="fDiscount" @if ($order->f_discount > 0) selected @endif>Tỷ lệ %</option>
-                                        <option value="mDiscount" @if ($order->m_discount > 0) selected @endif>Tiền mặt</option>
-                                    </select>
-
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="input-group">
-                                        <input type="number" class="form-control discount" value="{{$order->f_discount}}" min="0" name="discount" disabled style="display: none">
-                                        <input type="number" class="form-control discountAmount" value="{{ $order->m_discount }}" min="0" name="discountAmount" disabled style="display: none">
-                                        <span class="input-group-addon" style="display: none">%</span>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="control-label col-sm-4 no-padding-right text-bold" for="totalPrice">Total</label>
-                                <div class="col-sm-8">
-                                    <input name="totalPriceText" value="{{ $order->m_total }}"
-                                           class="form-control priceText" type="text" disabled/>
-                                    <input name="totalPrice" value="{{$order->m_total}}"
-                                           class="form-control" type="hidden" readonly id="totalPrice" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="form-group" style="float: right">
-                        <input class="btn btn-primary" type="submit" value="Lưu">
-                        <a class="btn btn-danger" onclick="history.back()">Quay lại</a>
-                    </div>
-                </div>
-            </form>
-            <div class="clearfix"></div>
+        <div class="box-tools">
+            <div class="btn-group pull-right" style="margin-right: 5px">
+                <a href="http://localhost/son/public/admin/goi-dieu-tris/" class="btn btn-sm btn-default" title="List"><i class="fa fa-list"></i><span class="hidden-xs">&nbsp;List</span></a>
+            </div>
         </div>
     </div>
+    {{-- <form action="{{ route("admin.goi-dieu-tris.update($order->id)") }}" method="POST" id="create-order-form"> --}}
+        <form action="http://localhost/son/public/admin/goi-dieu-tris/{{$order->id}}" method="POST" id="create-order-form">
+        <div class="box-body">
 
-    <input type="hidden" value="{{ route('admin.quote.index') }}" id="redirect-route">
-</div>
+            <div class="fields-group">
 
-<script type="javascript">
-    $( document ).ready(function() {
-       // $('input.price, #unitPrice, #purchasePrice').inputmask("#.##0", {reverse: true});
-        $('#customerId').select2({
-            placeholder: 'Chọn khách hàng',
-            delay: 250,
-            escapeMarkup: function(markup) {
-                return markup;
-            },
-            templateResult: function(data) {
-                return data.html;
-            },
-            templateSelection: function(data) {
-                return data.text;
-            },
-            ajax: {
-                url: "/admin/api/warranty",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        q: params.term,
-                        page: params.page || 1
-                    };
-                },
-                processResults: function (res, params) {
-                    let data = res.data;
-                    let page = params.page || 1;
-                    return {
-                        results: $.map(data, function(item) {
-                            return {
-                                title: item.name,
-                                text: item.code + "/" + item.name + "/" + item.mobile,
-                                id: item.id,
-                                html: item.code + "/" + item.name + "/" + item.mobile,
-                                data: item
-                            };
-                        }),
-                        pagination: {
-                            more: page * 5 <= res.total
-                        }
-                    };
-                },
-                cache: true
+                <div class="col-md-12">
+                    <div class="form-group clearfix">
+                        <label for="ten" class="col-sm-2 asterisk control-label">Tên</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-pencil fa-fw"></i></span>
+                                <input required="1" type="text" id="ten" name="ten" value="{{ old('orderCode', $order->ten) }}" class="form-control ten" placeholder="Input Tên">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label for="mo_ta" class="col-sm-2  control-label">Mô tả</label>
+                        <div class="col-sm-8">
+                            <textarea name="mo_ta" class="form-control mo_ta" rows="5" placeholder="Input Mô tả">{{ old('orderCode', $order->mo_ta) }}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label for="gia" class="col-sm-2  control-label">Giá</label>
+
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-pencil fa-fw"></i></span>
+                                <input type="number" id="gia" name="gia" value="{{ old('orderCode', $order->gia) }}" class="form-control gia" placeholder="Input Giá">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label for="gia" class="col-sm-2  control-label">Giá Ưu Đãi</label>
+
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-pencil fa-fw"></i></span>
+                                <input type="number" id="giam_gia" name="giam_gia" value="{{ old('orderCode', $order->giam_gia) }}" class="form-control giam_gia" placeholder="Input Giá">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label for="so_buoi" class="col-sm-2  control-label">Số buổi</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-pencil fa-fw"></i></span>
+                                <input type="number" id="so_buoi" name="so_buoi" value="{{ old('orderCode', $order->so_buoi) }}" class="form-control so_buoi" placeholder="Input Số buổi">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label for="ghi_chu" class="col-sm-2  control-label">Ghi chú</label>
+                        <div class="col-sm-8">
+                            <textarea name="ghi_chu" class="form-control ghi_chu" rows="5" placeholder="Input Ghi chú">{{ old('orderCode', $order->ghi_chu) }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" id="tron_vattu">
+                <div class="form-group clearfix">
+                        <label for="gia" class="col-sm-2  control-label">Vật tư</label>
+
+                        <div class="col-sm-8">
+                            <select name="vattu" class="form-control" id="vattu">
+                                    <option value="">-- trọn vật tư --</option>
+                                    @foreach($vattu as $loc)
+
+                                        <option value="{{ $loc->id }}" @if($loc->id == old('created_by')) selected @endif>{{ $loc->ten}}</option>
+                                    @endforeach
+                                </select>
+                                <div id="ls_vt">
+                                    @foreach($vattu as $loc)
+                                    <div class="ls_vt" data-id="{{ $loc->id }}" data-name="{{ $loc->ten }}"  style="display: none;"></div>
+                                    @endforeach
+                                </div>
+                                <div id="vat_tu_goi_c">
+                                    {{-- @dd($order->dungcugoi); --}}
+                                    @foreach($order->dungcugoi as $dc)
+                                    <div class="vt_c" data-id="{{ $dc->vattu_id }}" data-name="" data-sl="{{ $dc->so_luong }}"  style="display: none;"></div>
+                                    @endforeach
+                                </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <span class="themvattu btn btn-primary">Thêm vật tư</span>
+                        </div>
+                    </div>
+
+            </div>
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="products_table">
+                        <thead>
+                        <tr>
+                            <th width="80%">Tên Vật Tư</th>
+                            <th width="10%">Số lượng</th>
+                            <th width="10%"></th>
+                        </tr>
+                        </thead>
+                        <tbody class="bang_vattu">
+                            {{-- <tr class="vat_tu_">
+                                <th width="80%">Tên Vật Tư</th>
+                                <th width="10%"><input type="number" value="" min="0" max="100" class="form-control so_luong_vt"></th>
+                                <th width="10%"><a class="btn btn-sm btn-danger remove-row"><i class="fa fa-minus-circle"></i></a></th>
+                            </tr> --}}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <input class="vat_tu_goi" name="vat_tu_goi" type="hidden"  value="">
+        <div class="col-md-12">
+            <div class="form-group" style="float: right">
+                <input class="btn btn-primary" type="submit" value="Lưu">
+                <a class="btn btn-danger" onclick="history.back()">Quay lại</a>
+            </div>
+        </div>
+    </form>
+    </div>
+
+    </div>
+
+
+    <script type="javascript">
+        $('.themvattu').attr('disabled', 'disabled');
+        var ls_vat_tu = [];
+        $('#ls_vt').find('.ls_vt').each(function() {
+            if($(this).attr('data-id') != ''){
+                let vt = {
+                    'id' : $(this).attr('data-id'),
+                    'ten_vt' : $(this).attr('data-name'),
+                }
+                ls_vat_tu.push(vt);
             }
-        }).on('select2:select', function (e) {
-            $(".select-product").prop("disabled", false);
-        }).trigger('change');
-        $('#select-product').select2({
-            placeholder: 'Chọn sản phẩm',
-            delay: 250,
-            escapeMarkup: function(markup) {
-                return markup;
-            },
-            templateResult: function(data) {
-                return data.html;
-            },
-            templateSelection: function(data) {
-                return data;
-            },
-            ajax: {
-                url: "/admin/api/products",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        q: params.term,
-                        page: params.page || 1
-                    };
-                },
-                processResults: function (res, params) {
-                    let data = res.data;
-                    let page = params.page || 1;
-                    return {
-                        results: $.map(data, function(item) {
-                            return {
-                                title: item.name,
-                                text: item.code + "/" + item.name ,
-                                id: item.id,
-                                html: item.code + "/" + item.name,
-                                data: item
-                            };
-                        }),
-                        pagination: {
-                            more: page * 5 <= res.total
-                        }
-                    };
-                },
-                cache: true
+        });
+        setTimeout(function () {
+            load_vt_c();
+        }, 1000);
+        {{-- settimeout(load_vt_c,1000); --}}
+        var vattus = [];
+        $('#vat_tu_goi_c').find('.vt_c').each(function() {
+            let vt_id = $(this).attr('data-id');
+            if(vt_id != ''){
+                let vt_name = '';
+                ls_vat_tu.forEach((element)=>{
+                    if(element.id == vt_id){
+                        vt_name = element.ten_vt;
+                    }
+                });
+                let vt = {
+                    'id' : $(this).attr('data-id'),
+                    'ten_vt' : vt_name,
+                    'soluong_vt' : $(this).attr('data-sl'),
+                }
+                vattus.push(vt);
             }
-        }).on('select2:select', function (e) {
-            let data = e.params.data;
-            addRow(data.data);
-        }).trigger('change');
-        $('#products_table').on('click', '.remove-row', function() {
-            $(this).closest('tr').remove();
-            calTotal();
         });
 
-        $('#products_table').on('change keypress keyup', 'input.qty, input.price, ' +
-            '.f-discount, .m-discount', function() {
-            let $tr = $(this).closest('tr');
-            let num = $tr.find('input.qty').val();
-            let price = $tr.find('input.price').val();
-            price = Number(price);
+        function load_vt_c(){
+            console.log(vattus);
+            if(vattus.length > 0){
+                let html = '';
+                vattus.forEach((element)=>{
 
-            let fDiscount = $tr.find('.f-discount').val();
-            let mDiscount = $tr.find('.m-discount').val();
+                        html += `<tr class="vat_tu_${element.id}" data-id="${element.id}">
+                            <th width="80%">${element.ten_vt}</th>
+                            <th width="10%"><input type="number" value="${element.soluong_vt}" min="0" max="100" class="form-control so_luong_vt" ></th>
+                            <th width="10%"><a class="btn btn-sm btn-danger remove-row"><i class="fa fa-minus-circle"></i></a></th>
+                        </tr>`;
 
-            $tr.find('.m-discount').attr('max', price);
 
-            if(fDiscount > 100) {
-                $tr.find('.f-discount').val(100);
-            }
-
-            if(Number(mDiscount) > Number(price)) {
-                $tr.find('.m-discount').val(price);
-            }
-
-            let total = num * price;
-            if(fDiscount > 0) {
-                total = num * (price - fDiscount*price/100);
-            } else if(mDiscount > 0) {
-                total = num * (price - mDiscount);
-            }
-
-            $tr.find('td.total > input').val(total);
-            $tr.find('td.total > span').text(formatter.format(total));
-            calTotal();
-            $('.paid, #totalPrice').trigger('change');
-        });
-        $(".discountType").on('change', function(e) {
-            $(".discount, .discountAmount").hide().prop("disabled", true);
-            $(".discount, .discountAmount").closest('.input-group').find('.input-group-addon').hide();
-            let val = $(".discount").val();
-            let vall = $(".discountAmount").val();
-            if($(this).val() == 'fDiscount') {
-                $(".discount").show().prop("disabled", false).val(val);
-                $(".discount").closest('.input-group').find('.input-group-addon')
-                    .show().text('%');
-            }
-            if($(this).val() == 'mDiscount') {
-                $(".discountAmount").val(vall);
-                $(".discountAmount").show().prop("disabled", false);
-                $(".discountAmount").closest('.input-group').find('.input-group-addon').show().text('VND');
+                });
+                $('.bang_vattu').append(html);
             }
             calTotal();
-        });
+        }
 
-        $(".discountType").trigger('change');
 
-        $(".discount, .discountAmount, .paid, #totalPrice").on('change keypress keyup', function () {
-            calTotal();
-        });
 
         $("#create-order-form").submit(function (e) {
             e.preventDefault();
             let url = $(this).attr('action');
-            console.log(url);
             var data = $(this).serialize();
             $.ajax({
                 headers: {
@@ -327,10 +206,9 @@
                     console.log(result);
                     if (result.success == 1) {
                         toastr.success(result.message);
-
                         let redirectURL = $('#redirect-route').val();
                         if(redirectURL)
-                            window.location.replace(redirectURL);
+                        window.location.replace(redirectURL);
 
                     } else {
                         toastr.error(result.message);
@@ -338,5 +216,104 @@
                 },
             });
         });
-    });
-</script>
+        function kt_mang(id){
+            let kt = 0
+            if(vattus.length > 0){
+                vattus.forEach((element)=>{
+                    if(id == element.id){
+                        kt = 1;
+                    }
+                });
+            }
+            if(kt == 0){
+                return false;
+            }else{
+                return true;
+            }
+
+        }
+
+        $('#tron_vattu').on('click', '.themvattu', function() {
+            let id = $('#vattu').val();
+            if(id != '' && id != null){
+                let html ='';
+                console.log(kt_mang(id));
+                if(kt_mang(id) == true){
+                    alert('Vật tư này đã có');
+                }else{
+                    if(ls_vat_tu.length > 0){
+
+                        ls_vat_tu.forEach((element)=>{
+                            if(element.id == id){
+                                html = `<tr class="vat_tu_${element.id}" data-id="${element.id}">
+                                    <th width="80%">${element.ten_vt}</th>
+                                    <th width="10%"><input type="number" value="1" min="0" max="100" class="form-control so_luong_vt" ></th>
+                                    <th width="10%"><a class="btn btn-sm btn-danger remove-row"><i class="fa fa-minus-circle"></i></a></th>
+                                </tr>`;
+                                let vt = {
+                                    'id' : element.id,
+                                    'ten_vt' : element.ten_vt,
+                                    'soluong_vt': 1,
+                                }
+                                vattus.push(vt);
+                            }
+                        });
+                    }
+                    if( html != ''){
+                        $('.bang_vattu').append(html);
+                    }
+                    calTotal();
+                }
+
+
+            }
+
+        });
+        $('#products_table').on('click', '.remove-row', function() {
+            let tr = $(this).closest('tr');
+            let id = tr.attr('data-id');
+            if(vattus.length > 0){
+                vattus.forEach((element)=>{
+                    if(id == element.id){
+                        vattus.splice(element, 1);
+
+                    }
+                });
+            }
+            console.log(vattus);
+                calTotal();
+            tr.remove();
+        });
+
+        $('#vattu').on('change' ,function() {
+            let vt = $(this).val();
+            if( vt != '' && vt != null){
+                $('.themvattu').removeAttr("disabled");
+            }
+            else{
+                $('.themvattu').attr( 'disabled', 'disabled' );
+            }
+        });
+        $('#products_table').on('change keypress keyup', 'input.so_luong_vt', function() {
+            let tr = $(this).closest('tr');
+            let num = tr.find('input.so_luong_vt').val();
+            let id = tr.attr('data-id');
+            if(vattus.length > 0){
+                vattus.forEach((element)=>{
+                    if(id == element.id){
+                        element.soluong_vt = num;
+                    }
+                });
+            }
+
+            // $(this).closest('tr').remove();
+            calTotal();
+        });
+        function calTotal(){
+            if(vattus.length > 0){
+                $('.vat_tu_goi').val(JSON.stringify(vattus));
+                console.log($('.vat_tu_goi').val());
+            }
+        }
+
+    </script>

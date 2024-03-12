@@ -91,7 +91,10 @@ class GoiDieuTriController extends AdminController
 
     public function show($id, Content $content)
     {
-
+        return $content
+            ->title($this->title())
+            ->description($this->description['show'] ?? trans('admin.show'))
+            ->body(self::editComponent($id));
     }
     public static function createComponent()
     {
@@ -102,9 +105,9 @@ class GoiDieuTriController extends AdminController
     public static function editComponent($id)
     {
         // $users=AdminUser::where('enable',true)->get();
-        // $order=Quote::with(['details','causer','user'])->find($id);
+        $order=GoiDieuTri::with(['goidt','dungcugoi'])->find($id);
         $vattu=VatTu::all();
-        return Admin::component('admin::goidieutri.edit', compact('vattu'));
+        return Admin::component('admin::goidieutri.edit', compact('vattu','order'));
     }
     public function create(Content $content)
     {
@@ -124,7 +127,50 @@ class GoiDieuTriController extends AdminController
    }
    public function update($id)
    {
+    $data=request()->all();
 
+    try {
+        DB::beginTransaction();
+            //Tạo gới trang bị
+            $goidieutri=GoiDieuTri::find($id);
+            $goidieutri->fill([
+
+            'ten'=>$data['ten'],
+            'mo_ta'=>$data['mo_ta'],
+            'gia'=>$data['gia'],
+            'giam_gia'=>$data['giam_gia'],
+            'so_buoi'=>$data['so_buoi'],
+            'ghi_chu'=>$data['ghi_chu'],
+        ]);
+
+            //  dd($data);
+        $goidieutri->save();
+
+        GoiDieuTriDetail::where('goidieutri_id', $id)->delete();
+
+        $vat_tus = json_decode($data['vat_tu_goi'], true);
+        foreach ($vat_tus as $vat_tu) {
+            $detail= new GoiDieuTriDetail([
+                'goidieutri_id'=>(int)$id,
+                'vattu_id'=> (int)$vat_tu['id'],
+                'so_luong'=>$vat_tu['soluong_vt'],
+            ]);
+            $detail->save();
+        }
+        // lưu chi tiết gới
+        DB::commit();
+    }catch (\Exception $e)
+    {
+        DB::rollBack();
+        return response()->json([
+            'success'=>0,
+            'message'=>$e->getMessage()
+        ]);
+    }
+    return response()->json([
+        'success'=>1,
+        'message'=>'Cập nhật thành công'
+    ]);
    }
 
    public function store()
@@ -172,6 +218,7 @@ class GoiDieuTriController extends AdminController
         'success'=>1,
         'message'=>'Thêm mới thành công'
     ]);
+
 
 }
 }

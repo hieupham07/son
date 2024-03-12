@@ -6,7 +6,7 @@
 
     <div class="box-tools">
         <div class="btn-group pull-right" style="margin-right: 5px">
-            <a href="http://localhost/son/public/admin/goi-dieu-tris/" class="btn btn-sm btn-default" title="List"><i class="fa fa-list"></i><span class="hidden-xs">&nbsp;List</span></a>
+            <a href="/admin/goi-dieu-tris/" class="btn btn-sm btn-default" title="List"><i class="fa fa-list"></i><span class="hidden-xs">&nbsp;List</span></a>
         </div>
     </div>
 </div>

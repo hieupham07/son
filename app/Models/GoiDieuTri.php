@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class GoiDieuTri extends Model
 {
@@ -20,6 +21,14 @@ class GoiDieuTri extends Model
     ];
     public function dungcugoi()
     {
-        return $this->hasMany(DungCuGoi::class, 'goi_id');
+        return $this->hasMany(GoiDieuTriDetail::class, 'goidieutri_id');
+    }
+    // public function details()
+    // {
+    //     return $this->hasMany(QuoteDetail::class, 'quote_id');
+    // }
+    public function goidt(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

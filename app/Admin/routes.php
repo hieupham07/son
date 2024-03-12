@@ -23,4 +23,6 @@ Route::group([
     $router->resource('khach-dieu-tris', KhachDieuTriController::class);
     $router->resource('goi-dieu-tri-khaches', GoiDieuTriKhachController::class);
     $router->resource('goi-dieu-tri-details', GoiDieuTriDetailController1::class);
+    $router->resource('phieu-thus', PhieuThuController::class);
+    // $router->resources(['goi-dieu-tri-details'=>QuoteController::class ]);
 });
