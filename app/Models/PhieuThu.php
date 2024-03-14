@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class PhieuThu extends Model
 {
@@ -17,10 +18,7 @@ class PhieuThu extends Model
         'tien_con',
         'ghi_chu',
     ];
-    public function khachhang()
-    {
-        return $this->belongsTo(KhachHang::class, 'khach_hang_id');
-    }
+
     public function details()
     {
         return $this->hasMany(PhieuThuDetail::class, 'phieu_id');

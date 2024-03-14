@@ -57,18 +57,18 @@ class GoiDieuTriController extends AdminController
      * @param mixed $id
      * @return Show
      */
-    // protected function detail($id)
-    // {
-    //     $show = new Show(GoiDieuTri::findOrFail($id));
-    //     $show->id('ID');
-    //     $show->ten("Tên");
-    //     $show->mo_ta('Mô tả');
-    //     $show->gia('Giá');
-    //     $show->so_buoi('Số buổi');
-    //     $show->created_at();
-    //     $show->updated_at();
-    //     return $show;
-    // }
+    protected function detail($id)
+    {
+        $show = new Show(GoiDieuTri::findOrFail($id));
+        $show->id('ID');
+        $show->ten("Tên");
+        $show->mo_ta('Mô tả');
+        $show->gia('Giá');
+        $show->so_buoi('Số buổi');
+        $show->created_at();
+        $show->updated_at();
+        return $show;
+    }
 
     /**
      * Make a form builder.

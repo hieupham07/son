@@ -14,4 +14,8 @@ class DongGoi extends Model
         'ghi_chu',
         'sua',
     ];
+    // public function donggoi()
+    // {
+    //     return $this->hasMany(Thuoc::class, 'id');
+    // }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class KhachDieuTri extends Model
 {
@@ -22,5 +23,9 @@ class KhachDieuTri extends Model
     public function goidieutri()
     {
         return $this->belongsTo(GoiDieuTri::class,'goi_d_t_id');
+    }
+    public function causer(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

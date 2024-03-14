@@ -73,10 +73,10 @@ class VatTuController extends AdminController
         ->tools(function ($tools) {
             // $tools->disableEdit();
         });
-    $show->ten("Tên");
-    $show->mo_ta('Mô tả');
-    $show->created_at();
-    $show->updated_at();
+        $show->ten("Tên");
+        $show->mo_ta('Mô tả');
+        $show->created_at();
+        $show->updated_at();
         return $show;
     }
 

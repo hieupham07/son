@@ -11,6 +11,6 @@
         <th width="10%">Ghi chú</th>
         <th width="5%"></th>
     </tr>
-    </thead>
+        </thead>
     <tbody></tbody>
 </table>

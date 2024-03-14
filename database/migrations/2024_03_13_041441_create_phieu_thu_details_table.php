@@ -14,7 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('phieu_thu_details', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->unsignedInteger('phieu_thu_id')->nullable();
+            $table->foreign('phieu_thu_id')->references('id')->on('phieu_thus')->onDelete('cascade')->onUpdate('cascade');
+            $table->text('content');
             $table->timestamps();
         });
     }

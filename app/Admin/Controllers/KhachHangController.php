@@ -42,18 +42,18 @@ class KhachHangController extends AdminController
         $grid->ngay_sinh('Ngày sinh');
         $grid->dien_thoai('Điện thoại');
         $grid->dia_chi('Địa chỉ');
-        $grid->column('goi_id','Gói điều trị')->display(function ($goi_id) {
-            $goi=GoiDieuTri::find($goi_id);
-            if($goi) {
-                return $goi->ten;
-            }
-        });
-        $grid->column('kh_goi_id','Điều trị ngay')->display(function ($goi_dt_id) {
-            $goi_dt=KhachHangGoi::find($goi_dt_id);
-            if($goi_dt) {
-                return $goi_dt->ten;
-            }
-        });
+        // $grid->column('goi_id','Gói điều trị')->display(function ($goi_id) {
+        //     $goi=GoiDieuTri::find($goi_id);
+        //     if($goi) {
+        //         return $goi->ten;
+        //     }
+        // });
+        // $grid->column('kh_goi_id','Điều trị ngay')->display(function ($goi_dt_id) {
+        //     $goi_dt=KhachHangGoi::find($goi_dt_id);
+        //     if($goi_dt) {
+        //         return $goi_dt->ten;
+        //     }
+        // });
         $grid->filter(function ($filter) {
             // Remove the default id filter
             $filter->disableIdFilter();
@@ -94,16 +94,27 @@ class KhachHangController extends AdminController
     protected function form()
     {
         $form = new Form(new KhachHang());
-        $form->text('name',"Họ và tên")->required();
+        $form->text('ho_ten',"Họ và tên")->required();
+        $form->hidden('ma_khach');
         $form->date('ngay_sinh','Ngày sinh');
         $form->radio('gioi_tinh','Giới tính')->options([1 => 'Nam', 0=> 'Nữ'])->default(1);
-        $form->text('dien_thoai',"Điện thoại")->required();
-        $form->text('dien_thoai1',"Điện thoại");
+        $form->text('dien_thoai',"Điện thoại")
+        ->creationRules(['required', "unique:khach_hangs,dien_thoai"])
+        ->updateRules(['required', "unique:khach_hangs,dien_thoai,{{id}}"]);
+
+        $form->text('dien_thoai1',"Điện thoại")
+        ->creationRules(['required', "unique:khach_hangs,dien_thoai"])
+        ->updateRules(['required', "unique:khach_hangs,dien_thoai1,{{id}}"]);;
         $form->text('dia_chi',"Địa chỉ");
-        $form->select('goi_id','Gói điều trị')->options(GoiDieuTri::all()->pluck('ten', 'id'));
-        $form->select('kh_goi_id','Điều trị ngay')->options(KhachHangGoi::all()->pluck('ten', 'id'));
+        $form->text('ghi_chu',"Ghi chú");
+
+        // $form->select('goi_id','Gói điều trị')->options(GoiDieuTri::all()->pluck('ten', 'id'));
+        // $form->select('kh_goi_id','Điều trị ngay')->options(KhachHangGoi::all()->pluck('ten', 'id'));
         $form->display('created_at', 'Created At');
         $form->display('updated_at', 'Updated At');
+        $form->saving(function (Form $form) {
+            $form->ma_khach = $form->ho_ten;
+        });
         return $form;
     }
 }
