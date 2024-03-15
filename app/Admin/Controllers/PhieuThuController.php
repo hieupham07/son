@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Models\PhieuThu;
 use App\Models\KhachHang;
 use App\Models\GoiDieuTri;
+use App\Models\Thuoc;
 
 use Encore\Admin\Admin;
 use Encore\Admin\Controllers\AdminController;
@@ -98,7 +99,9 @@ class PhieuThuController extends AdminController
     {
         $ls_khach= KhachHang::all();
         $ls_goi_dt = GoiDieuTri::all();
-        return Admin::component('admin::phieuthu.create', compact('ls_khach','ls_goi_dt'));
+        $ls_thuoc = Thuoc::all();
+
+        return Admin::component('admin::phieuthu.create', compact('ls_khach','ls_goi_dt','ls_thuoc'));
         // return view('vendor.admin.quote.create');/
     }
     public static function editComponent($id)
@@ -107,7 +110,8 @@ class PhieuThuController extends AdminController
         $order= PhieuThu::with(['details','phieuthu'])->find($id);
         $ls_khach= KhachHang::all();
         $ls_goi_dt = GoiDieuTri::all();
-        return Admin::component('admin::phieuthu.edit', compact('order','ls_khach','ls_goi_dt'));
+        $ls_thuoc = Thuoc::all();
+        return Admin::component('admin::phieuthu.edit', compact('order','ls_khach','ls_goi_dt','ls_thuoc'));
     }
     public function create(Content $content)
     {

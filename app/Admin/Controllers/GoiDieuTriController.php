@@ -149,13 +149,15 @@ class GoiDieuTriController extends AdminController
         GoiDieuTriDetail::where('goidieutri_id', $id)->delete();
 
         $vat_tus = json_decode($data['vat_tu_goi'], true);
-        foreach ($vat_tus as $vat_tu) {
-            $detail= new GoiDieuTriDetail([
-                'goidieutri_id'=>(int)$id,
-                'vattu_id'=> (int)$vat_tu['id'],
-                'so_luong'=>$vat_tu['soluong_vt'],
-            ]);
-            $detail->save();
+        if($vat_tus){
+            foreach ($vat_tus as $vat_tu) {
+                $detail= new GoiDieuTriDetail([
+                    'goidieutri_id'=>(int)$goidieutri->id,
+                    'vattu_id'=> (int)$vat_tu['id'],
+                    'so_luong'=>$vat_tu['soluong_vt'],
+                ]);
+                $detail->save();
+            }
         }
         // lưu chi tiết gới
         DB::commit();
@@ -194,14 +196,18 @@ class GoiDieuTriController extends AdminController
 
 
         $vat_tus = json_decode($data['vat_tu_goi'], true);
-        foreach ($vat_tus as $vat_tu) {
-            $detail= new GoiDieuTriDetail([
-                'goidieutri_id'=>(int)$goidieutri->id,
-                'vattu_id'=> (int)$vat_tu['id'],
-                'so_luong'=>$vat_tu['soluong_vt'],
-            ]);
-            $detail->save();
+
+        if($vat_tus){
+            foreach ($vat_tus as $vat_tu) {
+                $detail= new GoiDieuTriDetail([
+                    'goidieutri_id'=>(int)$goidieutri->id,
+                    'vattu_id'=> (int)$vat_tu['id'],
+                    'so_luong'=>$vat_tu['soluong_vt'],
+                ]);
+                $detail->save();
+            }
         }
+
         // lưu chi tiết gới
 
 
