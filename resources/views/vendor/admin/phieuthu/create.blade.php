@@ -80,7 +80,7 @@
                                 </select>
                                 <div id="ls_thuoc">
                                     @foreach($ls_thuoc as $thuoc)
-                                    <div class="ls_thuoc" data-id="{{ $thuoc->id }}" data-name="{{ $thuoc->ten }}"  style="display: none;"></div>
+                                    <div class="ls_thuoc" data-id="{{ $thuoc->id }}" data-name="{{ $thuoc->ten }}" data-gia="{{ $thuoc->gia }}" data-gia-giam="{{ $thuoc->giam_gia }}"  style="display: none;"></div>
                                     @endforeach
                                 </div>
                             </div>
@@ -139,15 +139,28 @@
     $('.themthuoc').attr('disabled', 'disabled');
     var stt = 1;
     var ls_goi_dt = [];
+    var ls_thuoc = [];
     var tong_tien_thu = 0;
     $('#ls_goidt').find('.goidt').each(function() {
         if($(this).attr('data-id') != ''){
             let dt = {
                 'id' : $(this).attr('data-id'),
                 'ten' : $(this).attr('data-name'),
+                'ten_goi' : 'Gói điều trị',
                 'gia' : $(this).attr('data-gia'),
             }
             ls_goi_dt.push(dt);
+        }
+    });
+    $('#ls_thuoc').find('.ls_thuoc').each(function() {
+        if($(this).attr('data-id') != ''){
+            let tt = {
+                'id' : $(this).attr('data-id'),
+                'ten' : $(this).attr('data-name'),
+                'ten_goi' : 'Thuóc',
+                'gia' : $(this).attr('data-gia'),
+            }
+            ls_thuoc.push(tt);
         }
     });
 
@@ -188,6 +201,7 @@
 
     $('#tron_goidt').on('click', '.themgoi', function() {
         let id = $('#goidieutri').val();
+
         if(id != '' && id != null){
             let html ='';
             console.log(kt_mang(id));
@@ -197,7 +211,7 @@
                 if(ls_goi_dt.length > 0){
                     ls_goi_dt.forEach((element)=>{
                         if(element.id == id){
-                            html = `<tr class="vat_tu_${element.id}" data-id="${element.id}" data-tien="${element.gia}" data-tong-tien="${element.gia}" data-sl="1">
+                            html = `<tr class="vat_tu_${element.id}" data-id="${element.id}" data-name="${element.ten_goi}" data-tien="${element.gia}" data-tong-tien="${element.gia}" data-sl="1">
                                 <td width="5%" class="text-center">${stt}</td>
                                 <td width="65%" class="text-center">Gói điều trị (${element.ten})</td>
                                 <td width="10%" class="text-center"><input type="number" value="1" min="0" max="100" class="form-control so_luong_gdt" ></td>
@@ -227,10 +241,16 @@
     $('#products_table').on('click', '.remove-row', function() {
         let tr = $(this).closest('tr');
         let id = tr.attr('data-id');
+
+        let ten_goi = tr.attr('data-name');
         if(ds_gdt.length > 0){
             ds_gdt.forEach((element)=>{
-                if(id == element.id){
-                    ds_gdt.splice(element, 1);
+                if(id == element.id && ten_goi == element.ten_goi){
+                    let vta = ds_gdt.indexOf(element);
+                    console.log(vta);
+                    if (vta > -1) {
+                        ds_gdt.splice(vta, 1);
+                    }
                     stt--;
                     tinh_tien();
                 }
@@ -278,6 +298,55 @@
             console.log($('.vat_tu_goi').val());
         }
     }
+
+    $('#thuoc').on('change' ,function() {
+        let vt = $(this).val();
+        if( vt != '' && vt != null){
+            $('.themthuoc').removeAttr("disabled");
+        }
+        else{
+            $('.themthuoc').attr( 'disabled', 'disabled' );
+        }
+    });
+
+    $('#tron_thuoc').on('click', '.themthuoc', function() {
+        let id = $('#thuoc').val();
+        if(id != '' && id != null){
+            let html ='';
+            console.log(kt_mang(id));
+            if(kt_mang(id) == true){
+                alert('Gói điều trị này đã có');
+            }else{
+                if(ls_thuoc.length > 0){
+                    ls_thuoc.forEach((element)=>{
+                        if(element.id == id ){
+                            html = `<tr class="vat_tu_${element.id}" data-id="${element.id}" data-name="${element.ten_goi}" data-tien="${element.gia}" data-tong-tien="${element.gia}" data-sl="1">
+                                <td width="5%" class="text-center">${stt}</td>
+                                <td width="65%" class="text-center">${element.ten}</td>
+                                <td width="10%" class="text-center"><input type="number" value="1" min="0" max="100" class="form-control so_luong_gdt" ></td>
+                                <td width="10%" class="text-center thanh_tien">${Intl.NumberFormat('en-VN').format(element.gia)} đ</td>
+                                <td width="10%" class="text-center"><a class="btn btn-sm btn-danger remove-row"><i class="fa fa-minus-circle"></i></a></td>
+                            </tr>`;
+                            let vt = {
+                                'id' : element.id,
+                                'ten_goi' : 'Thuóc',
+                                'soluong_goi': 1,
+                                'thanh_tien': element.gia,
+                            }
+                            ds_gdt.push(vt);
+                            stt++;
+                            tinh_tien();
+                        }
+                    });
+                }
+                if( html != ''){
+                    $('.bang_vattu').append(html);
+                }
+                calTotal();
+            }
+        }
+    });
+
     $("#create-order-form").submit(function (e) {
         e.preventDefault();
         let url = $(this).attr('action');
