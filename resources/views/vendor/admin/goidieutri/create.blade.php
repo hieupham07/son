@@ -158,9 +158,7 @@
                 console.log(result);
                 if (result.success == 1) {
                     toastr.success(result.message);
-                    let redirectURL = $('#redirect-route').val();
-                    if(redirectURL)
-                    window.location.replace(redirectURL);
+
 
                 } else {
                     toastr.error(result.message);

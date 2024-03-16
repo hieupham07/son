@@ -100,7 +100,7 @@ class PhieuThuController extends AdminController
         $ls_khach= KhachHang::all();
         $ls_goi_dt = GoiDieuTri::all();
         $ls_thuoc = Thuoc::all();
-
+        // $ls_khach = KhachHang::all();
         return Admin::component('admin::phieuthu.create', compact('ls_khach','ls_goi_dt','ls_thuoc'));
         // return view('vendor.admin.quote.create');/
     }
@@ -135,39 +135,46 @@ class PhieuThuController extends AdminController
     public function store()
     {
         $data=request()->all();
-
+        // error_log($data);
         try {
             DB::beginTransaction();
             $ten_khach = '';
             $khach_hang_id = '';
 
         //kt khách hàng
-            $khach_hang = DB::table('khach_hangs') -> where('dien_thoai', '=', $data['dien_thoai']) -> get();
-            if($khach_hang){
-                $ten_khach = $khach_hang->ho_ten;
-                $khach_hang_id = $khach_hang->id;
+
+            $khach_hang1 = KhachHang::where('dien_thoai', $data['dien_thoai'])-> get();
+            if(!is_null($khach_hang1)){
+
+                // $ten_khach = $khach_hang1->ho_ten;
+                // $khach_hang_id = $khach_hang1->id;
             }else{
-                $khach_hang = DB::table('khach_hangs') ->where('dien_thoai', '=', $data['dien_thoai1']) ->get();
-                if($khach_hang){
-                    $ten_khach = $khach_hang->ho_ten;
-                    $khach_hang_id = $khach_hang->id;
+                $khach_hang1 = KhachHang::where('dien_thoai1', $data['dien_thoai'])-> get();
+                if(!is_null($khach_hang1)){
+                    // $ten_khach = $khach_hang1->ho_ten;
+                    // $khach_hang_id = $khach_hang1->id;
                 }else{
                     $khach_hang = new KhachHang([
-                        'ho_ten'=>$data['ho_ten'],
-                        'ngay_sinh'=>$data['ngay_sinh'],
-                        'gioi_tinh'=>$data['gioi_tinh'],
-                        'dia_chi'=>$data['dia_chi'],
-                        'dien_thoai'=>$data['dien_thoai'],
+                        'ho_ten' => $data['ho_ten1'],
+                        'ngay_sinh' => $data['ngay_sinh'],
+                        'dia_chi' => $data['dia_chi'],
+                        'dien_thoai' => $data['dien_thoai'],
+
                     ]);
                     $khach_hang->save();
+                    $khach_hang_id =$khach_hang->id;
+
+                    return response()->json([
+                        'success'=>1,
+                        'message'=>$khach_hang
+                    ]);
                 }
             }
-
+            if($khach_hang_id != ''){
             //Tạo phiếu Thu
             $phieuthu = new PhieuThu([
-                'ma_phieuthu' => $data['ho_ten'],
-                'khach_hang_id'=> $khach_hang->id,
-                'goi_id' => $data['ho_ten'],
+                'ma_phieuthu' => $data['ma_phieuthu'],
+                'khach_hang_id'=> $khach_hang_id,
                 'tien_thanhtoan'  => $data['tien_thanhtoan'] ,
                 'tien_con' => $data['tien_con'] ,
                 'ghi_chu' => $data['ghi_chu'] ,
@@ -175,17 +182,24 @@ class PhieuThuController extends AdminController
 
             //  dd($data);
             $phieuthu->save();
+        }
+        else{
+            return response()->json([
+                'success'=>1,
+                'message'=>$data
+            ]);
+        }
 
 
-            $ls_details = json_decode($data['details'], true);
-            foreach ($ls_details as $vat_tu) {
-                $detail= new PhieuThuDetail([
-                    'phieu_thu_id'=>$phieuthu->id,
-                    'content'=> $vat_tu,
-                ]);
-                $detail->save();
-            }
-        //lưu chi tiết gới
+            // $ls_details = json_decode($data['details'], true);
+            // foreach ($ls_details as $vat_tu) {
+            //     $detail= new PhieuThuDetail([
+            //         'phieu_thu_id'=>$phieuthu->id,
+            //         'content'=> $vat_tu,
+            //     ]);
+            //     $detail->save();
+            // }
+
             DB::commit();
         }catch (\Exception $e)
         {
@@ -193,6 +207,7 @@ class PhieuThuController extends AdminController
             return response()->json([
                 'success'=>0,
                 'message'=>$e->getMessage()
+
             ]);
         }
         return response()->json([
@@ -205,5 +220,6 @@ class PhieuThuController extends AdminController
     public function update($id)
     {
     }
+
 
 }

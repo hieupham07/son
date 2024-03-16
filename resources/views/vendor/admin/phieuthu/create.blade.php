@@ -1,5 +1,39 @@
 
+<style type="text/css">
+    .o_tron_hoten{
+        position: relative;
+    }
+    #bang_ten_khach{
+        position: absolute;
+        top: 100%;
+        left: 15px;
+        width: calc(100% - 30px );
+        background: #ecf0f5;
+        z-index: 1;
+        display: none
+    }
+    #bang_ten_khach ul{
+        list-style: none;
+        padding: 0 ;
+        margin: 0;
+    }
+    #bang_ten_khach li{
+        list-style: none;
+        cursor: pointer;
+        padding: 3px;
+    }
+    #bang_ten_khach li:hover{
+        background: #dbe8f7;
+    }
+    #bang_ten_khach .close{
 
+    position: absolute;
+    top: -15px;
+    right: 5px;
+    color: #000;
+    opacity: 0.6;
+    }
+</style>
 <div class="themgoidieutri clearfix" style="background: #fff;">
     <div class="box-header with-border">
         <h3 class="box-title">Thêm mới Gói Điều Trị</h3>
@@ -28,22 +62,44 @@
                     </div>
                     <div class="form-group clearfix">
                         <label for="mo_ta" class="col-sm-2  control-label  text-right">Họ và tên</label>
-                        <div class="col-sm-4">
-                            <input required="1" type="text" id="ho_ten" name="ho_ten" value="" class="form-control ho_ten" placeholder="Input Tên">
+                        <div class="col-sm-4 o_tron_hoten">
+                            <input required="1" type="text" id="ho_ten" name="ho_ten1" value="" class="form-control ho_ten" placeholder="Input Tên">
+                            <div id="bang_ten_khach" data="http://localhost/son/public/admin/phieu-thus/fetchname">
+
+                                <ul class="bang_khach">
+                                    <li class="t_ten" data-id='' data-name='' data-dc='' data-dt=''>lê sĩ phán (0123456789)</li>
+                                    <li class="t_ten" data-id='' data-name='' data-dc='' data-ns=''>lê sĩ phán (0123456789)</li>
+                                    <li class="t_ten" data-id='' data-name='' data-dc='' data-ns=''>lê sĩ phán (0123456789)</li>
+                                    <li class="t_ten" data-id='' data-name='' data-dc='' data-ns=''>lê sĩ phán (0123456789)</li>
+                                    <li class="t_ten" data-id='' data-name='' data-dc='' data-ns=''>lê sĩ phán (0123456789)</li>
+                                </ul>
+                                <span class="close" style="display: inline;">✖</span>
+                            </div>
+                            <div id="ls_khachhang" style="display: none">
+                                @foreach($ls_khach as $khach)
+                                <p class="khach" data-id='{{$khach->id}}' data-name='{{$khach->ho_ten}}' data-dc='{{$khach->dia_chi}}' data-dt='{{$khach->dien_thoai}}'></p>
+                                @endforeach
+                            </div>
                         </div>
                         <label for="mo_ta" class="col-sm-2  control-label text-right">Số điện thoại</label>
                         <div class="col-sm-4">
                             <input required="1" type="text" id="dien_thoai" name="dien_thoai" value="" class="form-control dien_thoai" placeholder="SĐT">
+                            <div id="bang_dienthoai">
+                                <ul>
+                                    <li class="t_dienthoai" data-id='' data-name='' data-dc='' data-ns=''></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group clearfix">
                         <label for="mo_ta" class="col-sm-2  control-label  text-right">Ngày Sinh</label>
                         <div class="col-sm-4">
-                            <input required="1" type="text" id="ngay_sinh" name="ngay_sinh" value="" class="form-control ngay_sinh" placeholder="Ngày Sinh">
+                            <input  type="text" id="ngay_sinh" name="ngay_sinh" value="" class="form-control ngay_sinh" placeholder="Input Ngày sinh">
+                            {{-- <input  type="text" id="ngay_sinh" name="ngay_sinh" value="" class="form-control ngay_sinh" placeholder="Ngày Sinh"> --}}
                         </div>
                         <label for="mo_ta" class="col-sm-2  control-label text-right">Địa Chỉ</label>
                         <div class="col-sm-4">
-                            <input required="1" type="text" id="dia_chi" name="dia_chi" value="" class="form-control dia_chi" placeholder="Địa Chi">
+                            <input  type="text" id="dia_chi" name="dia_chi" value="" class="form-control dia_chi" placeholder="Địa Chi">
                         </div>
                     </div>
                     <div class="col-md-12" id="tron_goidt">
@@ -89,6 +145,33 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group clearfix">
+                        <label for="ten" class="col-sm-2  control-label  text-right">Số tiền thanh toán</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-pencil fa-fw"></i></span>
+                                <input  type="text" id="tien_thanhtoan" name="tien_thanhtoan" value="" class="form-control ten" placeholder="Input mã khách hàng">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label for="ten" class="col-sm-2  control-label  text-right">Số tiền còn lại</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-pencil fa-fw"></i></span>
+                                <input  type="text" id="tien_con" name="tien_con" value="" class="form-control tien_con" placeholder="Input mã khách hàng">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label for="ten" class="col-sm-2  control-label  text-right">Ghi chú</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-pencil fa-fw"></i></span>
+                                <input  type="text" id="ghi_chu" name="ghi_chu" value="" class="form-control ghi_chu" placeholder="Input mã khách hàng">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -121,13 +204,14 @@
                 </div>
             </div>
         </div>
-        <input class="vat_tu_goi" name="vat_tu_goi" type="hidden"  value="">
+
         <div class="col-md-12">
             <div class="form-group" style="float: right">
                 <input class="btn btn-primary" type="submit" value="Lưu">
                 <a class="btn btn-danger" onclick="history.back()">Quay lại</a>
             </div>
         </div>
+
     </form>
 </div>
 
@@ -347,6 +431,8 @@
         }
     });
 
+
+
     $("#create-order-form").submit(function (e) {
         e.preventDefault();
         let url = $(this).attr('action');
@@ -363,14 +449,52 @@
                 console.log(result);
                 if (result.success == 1) {
                     toastr.success(result.message);
-                    let redirectURL = $('#redirect-route').val();
-                    if(redirectURL)
-                    window.location.replace(redirectURL);
-
                 } else {
                     toastr.error(result.message);
                 }
             },
         });
     });
+
+    var ls_khachhang = [];
+    $('#ls_khachhang').find('.khach').each(function() {
+        if($(this).attr('data-id') != ''){
+            let dt = {
+                'id' : $(this).attr('data-id'),
+                'ho_ten' : $(this).attr('data-name'),
+                'dia_chi' : $(this).attr('data-dc'),
+                'dien_thoai' : $(this).attr('data-dt'),
+            }
+            ls_khachhang.push(dt);
+        }
+    });
+    $('#bang_ten_khach .close').click(function(){
+        $('#bang_ten_khach').fadeOut();
+    });
+    $('#ho_ten').keyup(function(){
+        let val = $(this).val().trim();
+        if((val!= null) && (val != '')){
+            let data_s = ls_khachhang.filter(item => item.ho_ten.toLowerCase().indexOf(val) > -1);
+            console.log(data_s);
+            let html_seach = '';
+            if(data_s.length > 0){
+                $('#bang_ten_khach').fadeIn();
+                data_s.forEach((element)=>{
+                    html_seach += `<li class="t_ten" data-id='${element.id}' data-name='${element.ho_ten}' data-dc='${element.dia_chi}' data-dt='${element.dien_thoai}'>${element.ho_ten} (${element.dien_thoai})</li>`;
+                });
+                $('#bang_ten_khach').find('.bang_khach').html(html_seach);
+            }
+            else{
+            }
+        }
+    });
+    $('#bang_ten_khach .bang_khach').on('click', '.t_ten', function() {
+        let khach_ten = $(this).attr('data-name');
+        let khach_dc = $(this).attr('data-dc');
+        let khach_dt = $(this).attr('data-dt');
+        $('#ho_ten').val(khach_ten);
+        $('#dien_thoai').val(khach_dt);
+        $('#dia_chi').val(khach_dc);
+    });
+
 </script>
