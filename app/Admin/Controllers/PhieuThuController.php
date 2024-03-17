@@ -143,31 +143,25 @@ class PhieuThuController extends AdminController
 
         //kt khách hàng
 
-            $khach_hang1 = KhachHang::where('dien_thoai', $data['dien_thoai'])-> get();
+            $khach_hang1 = KhachHang::where('dien_thoai', $data['dien_thoai'])->first();
             if(!is_null($khach_hang1)){
 
-                // $ten_khach = $khach_hang1->ho_ten;
-                // $khach_hang_id = $khach_hang1->id;
+                $ten_khach = $khach_hang1->ho_ten;
+                $khach_hang_id = $khach_hang1->id;
             }else{
-                $khach_hang1 = KhachHang::where('dien_thoai1', $data['dien_thoai'])-> get();
+                $khach_hang1 = KhachHang::where('dien_thoai1', $data['dien_thoai'])->first();
                 if(!is_null($khach_hang1)){
-                    // $ten_khach = $khach_hang1->ho_ten;
-                    // $khach_hang_id = $khach_hang1->id;
+                    $ten_khach = $khach_hang1->ho_ten;
+                    $khach_hang_id = $khach_hang1->id;
                 }else{
                     $khach_hang = new KhachHang([
                         'ho_ten' => $data['ho_ten1'],
                         'ngay_sinh' => $data['ngay_sinh'],
                         'dia_chi' => $data['dia_chi'],
                         'dien_thoai' => $data['dien_thoai'],
-
                     ]);
                     $khach_hang->save();
                     $khach_hang_id =$khach_hang->id;
-
-                    return response()->json([
-                        'success'=>1,
-                        'message'=>$khach_hang
-                    ]);
                 }
             }
             if($khach_hang_id != ''){
@@ -179,8 +173,6 @@ class PhieuThuController extends AdminController
                 'tien_con' => $data['tien_con'] ,
                 'ghi_chu' => $data['ghi_chu'] ,
             ]);
-
-            //  dd($data);
             $phieuthu->save();
         }
         else{
@@ -214,8 +206,6 @@ class PhieuThuController extends AdminController
             'success'=>1,
             'message'=>'Thêm mới thành công'
         ]);
-
-
     }
     public function update($id)
     {

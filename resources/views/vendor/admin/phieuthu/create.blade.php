@@ -33,6 +33,36 @@
     color: #000;
     opacity: 0.6;
     }
+    #bang_dienthoai{
+        position: absolute;
+        top: 100%;
+        left: 15px;
+        width: calc(100% - 30px );
+        background: #ecf0f5;
+        z-index: 1;
+        display: none
+    }
+    #bang_dienthoai ul{
+        list-style: none;
+        padding: 0 ;
+        margin: 0;
+    }
+    #bang_dienthoai li{
+        list-style: none;
+        cursor: pointer;
+        padding: 3px;
+    }
+    #bang_dienthoai li:hover{
+        background: #dbe8f7;
+    }
+    #bang_dienthoai .close{
+
+    position: absolute;
+    top: -15px;
+    right: 5px;
+    color: #000;
+    opacity: 0.6;
+    }
 </style>
 <div class="themgoidieutri clearfix" style="background: #fff;">
     <div class="box-header with-border">
@@ -67,11 +97,7 @@
                             <div id="bang_ten_khach" data="http://localhost/son/public/admin/phieu-thus/fetchname">
 
                                 <ul class="bang_khach">
-                                    <li class="t_ten" data-id='' data-name='' data-dc='' data-dt=''>lê sĩ phán (0123456789)</li>
-                                    <li class="t_ten" data-id='' data-name='' data-dc='' data-ns=''>lê sĩ phán (0123456789)</li>
-                                    <li class="t_ten" data-id='' data-name='' data-dc='' data-ns=''>lê sĩ phán (0123456789)</li>
-                                    <li class="t_ten" data-id='' data-name='' data-dc='' data-ns=''>lê sĩ phán (0123456789)</li>
-                                    <li class="t_ten" data-id='' data-name='' data-dc='' data-ns=''>lê sĩ phán (0123456789)</li>
+
                                 </ul>
                                 <span class="close" style="display: inline;">✖</span>
                             </div>
@@ -85,9 +111,10 @@
                         <div class="col-sm-4">
                             <input required="1" type="text" id="dien_thoai" name="dien_thoai" value="" class="form-control dien_thoai" placeholder="SĐT">
                             <div id="bang_dienthoai">
-                                <ul>
-                                    <li class="t_dienthoai" data-id='' data-name='' data-dc='' data-ns=''></li>
+                                <ul class="bang_khach">
+
                                 </ul>
+                                <span class="close" style="display: inline;">✖</span>
                             </div>
                         </div>
                     </div>
@@ -159,7 +186,7 @@
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-pencil fa-fw"></i></span>
-                                <input  type="text" id="tien_con" name="tien_con" value="" class="form-control tien_con" placeholder="Input mã khách hàng">
+                                <input  type="text" id="tien_con" name="tien_con" value="0" class="form-control tien_con" placeholder="Input mã khách hàng">
                             </div>
                         </div>
                     </div>
@@ -204,7 +231,7 @@
                 </div>
             </div>
         </div>
-
+        <input class="vat_tu_goi" name="vat_tu_goi" type="hidden"  value="">
         <div class="col-md-12">
             <div class="form-group" style="float: right">
                 <input class="btn btn-primary" type="submit" value="Lưu">
@@ -275,6 +302,7 @@
             if(tt > 0){
                 tong_tien_thu = tt;
                 $('#products_table').find('.tong_tien_thu').html(Intl.NumberFormat('en-VN').format(tong_tien_thu) + ' đ');
+                $('#tien_thanhtoan').val(tong_tien_thu);
             }
 
         }
@@ -304,6 +332,8 @@
                             </tr>`;
                             let vt = {
                                 'id' : element.id,
+                                'ten' : 'Gói điều trị ('+element.ten+')',
+                                'gia' : element.gia,
                                 'ten_goi' : 'Gói điều trị',
                                 'soluong_goi': 1,
                                 'thanh_tien': element.gia,
@@ -321,7 +351,21 @@
             }
         }
     });
-
+    function lambang(){
+        let html ='';
+        let sttt = 1;
+        ds_gdt.forEach((element)=>{
+            html += `<tr class="vat_tu_${element.id}" data-id="${element.id}" data-name="${element.ten_goi}" data-tien="${element.gia}" data-tong-tien="${element.thanh_tien}" data-sl="${element.soluong_goi}">
+                <td width="5%" class="text-center">${sttt}</td>
+                <td width="65%" class="text-center">${element.ten}</td>
+                <td width="10%" class="text-center"><input type="number" value="${element.soluong_goi}" min="0" max="100" class="form-control so_luong_gdt" ></td>
+                <td width="10%" class="text-center thanh_tien">${Intl.NumberFormat('en-VN').format(element.thanh_tien)} đ</td>
+                <td width="10%" class="text-center"><a class="btn btn-sm btn-danger remove-row"><i class="fa fa-minus-circle"></i></a></td>
+            </tr>`;
+            sttt++;
+        });
+        $('.bang_vattu').html(html);
+    }
     $('#products_table').on('click', '.remove-row', function() {
         let tr = $(this).closest('tr');
         let id = tr.attr('data-id');
@@ -343,6 +387,7 @@
         console.log(ds_gdt);
         calTotal();
         tr.remove();
+        lambang();
     });
 
     $('#goidieutri').on('change' ,function() {
@@ -413,6 +458,8 @@
                             </tr>`;
                             let vt = {
                                 'id' : element.id,
+                                'ten' : element.ten,
+                                'gia' : element.gia,
                                 'ten_goi' : 'Thuóc',
                                 'soluong_goi': 1,
                                 'thanh_tien': element.gia,
@@ -488,6 +535,34 @@
             }
         }
     });
+    $('#dien_thoai').keyup(function(){
+        let val = $(this).val().trim();
+        if((val!= null) && (val != '')){
+            let data_s = ls_khachhang.filter(item => item.dien_thoai.toLowerCase().indexOf(val) > -1);
+            console.log(data_s);
+            let html_seach = '';
+            if(data_s.length > 0){
+                $('#bang_dienthoai').fadeIn();
+                data_s.forEach((element)=>{
+                    html_seach += `<li class="t_ten" data-id='${element.id}' data-name='${element.ho_ten}' data-dc='${element.dia_chi}' data-dt='${element.dien_thoai}'>${element.dien_thoai}</li>`;
+                });
+                $('#bang_dienthoai').find('.bang_khach').html(html_seach);
+            }
+            else{
+            }
+        }
+    });
+
+    $('#bang_dienthoai .bang_khach').on('click', '.t_ten', function() {
+        let khach_ten = $(this).attr('data-name');
+        let khach_dc = $(this).attr('data-dc');
+        let khach_dt = $(this).attr('data-dt');
+        $('#ho_ten').val(khach_ten);
+        $('#dien_thoai').val(khach_dt);
+        $('#dia_chi').val(khach_dc);
+        $('#bang_dienthoai').fadeOut();
+    });
+
     $('#bang_ten_khach .bang_khach').on('click', '.t_ten', function() {
         let khach_ten = $(this).attr('data-name');
         let khach_dc = $(this).attr('data-dc');
@@ -495,6 +570,11 @@
         $('#ho_ten').val(khach_ten);
         $('#dien_thoai').val(khach_dt);
         $('#dia_chi').val(khach_dc);
+        $('#bang_ten_khach').fadeOut();
     });
-
+    $('#tien_thanhtoan').on('change' ,function() {
+        let tien_tt = $(this).val().trim();
+        let tien_c = tong_tien_thu - tien_tt;
+        $('#tien_con').val(tien_c);
+    });
 </script>
