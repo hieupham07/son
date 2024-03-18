@@ -13,7 +13,7 @@ class PhieuThu extends Model
     protected $fillable = [
         'ma_phieuthu',
         'khach_hang_id',
-        'goi_id',
+
         'tien_thanhtoan',
         'tien_con',
         'ghi_chu',
@@ -23,10 +23,10 @@ class PhieuThu extends Model
     {
         return $this->hasMany(PhieuThuDetail::class, 'phieu_id');
     }
-    public function goi_dt()
-    {
-        return $this->hasMany(GoiDieuTri::class, 'goi_id');
-    }
+    // public function goi_dt()
+    // {
+    //     return $this->hasMany(GoiDieuTri::class, 'goi_id');
+    // }
     public function phieuthu(): MorphTo
     {
         return $this->morphTo();

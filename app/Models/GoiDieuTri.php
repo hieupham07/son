@@ -23,6 +23,10 @@ class GoiDieuTri extends Model
     {
         return $this->hasMany(GoiDieuTriDetail::class, 'goidieutri_id');
     }
+    // public function khachhang()
+    // {
+    //     return $this->hasMany(KhachHang::class, 'goidieutri_id');
+    // }
     // public function details()
     // {
     //     return $this->hasMany(QuoteDetail::class, 'quote_id');

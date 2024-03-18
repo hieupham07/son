@@ -26,5 +26,5 @@ Route::group([
     $router->resource('phieu-thus', PhieuThuController::class);
     $router->resource('thuocs', ThuocController::class);
     // Route::post('/phieu-thus/fetchname', 'PhieuThuController@fetchname')->name('phieu-thus.fetchname');
-    // $router->resources(['goi-dieu-tri-details'=>QuoteController::class ]);
+    $router->resource('phieu_thu_details', PhieuThuDetailController::class);
 });

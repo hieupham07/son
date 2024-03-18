@@ -6,6 +6,10 @@ use App\Models\PhieuThu;
 use App\Models\KhachHang;
 use App\Models\GoiDieuTri;
 use App\Models\Thuoc;
+use App\Models\KhachDieuTri;
+use App\Models\GoiDieuTriKhach;
+use App\Models\PhieuThuDetail;
+
 
 use Encore\Admin\Admin;
 use Encore\Admin\Controllers\AdminController;
@@ -143,66 +147,78 @@ class PhieuThuController extends AdminController
 
         //kt khách hàng
 
-            $khach_hang1 = KhachHang::where('dien_thoai', $data['dien_thoai'])-> get();
+            $khach_hang1 = KhachHang::where('dien_thoai', $data['dien_thoai'])->first();
             if(!is_null($khach_hang1)){
 
-                // $ten_khach = $khach_hang1->ho_ten;
-                // $khach_hang_id = $khach_hang1->id;
+                $ten_khach = $khach_hang1->ho_ten;
+                $khach_hang_id = $khach_hang1->id;
             }else{
-                $khach_hang1 = KhachHang::where('dien_thoai1', $data['dien_thoai'])-> get();
+                $khach_hang1 = KhachHang::where('dien_thoai1', $data['dien_thoai'])->first();
                 if(!is_null($khach_hang1)){
-                    // $ten_khach = $khach_hang1->ho_ten;
-                    // $khach_hang_id = $khach_hang1->id;
+                    $ten_khach = $khach_hang1->ho_ten;
+                    $khach_hang_id = $khach_hang1->id;
                 }else{
                     $khach_hang = new KhachHang([
                         'ho_ten' => $data['ho_ten1'],
                         'ngay_sinh' => $data['ngay_sinh'],
                         'dia_chi' => $data['dia_chi'],
                         'dien_thoai' => $data['dien_thoai'],
-
                     ]);
                     $khach_hang->save();
                     $khach_hang_id =$khach_hang->id;
-
-                    return response()->json([
-                        'success'=>1,
-                        'message'=>$khach_hang
-                    ]);
                 }
             }
             if($khach_hang_id != ''){
-            //Tạo phiếu Thu
-            $phieuthu = new PhieuThu([
-                'ma_phieuthu' => $data['ma_phieuthu'],
-                'khach_hang_id'=> $khach_hang_id,
-                'tien_thanhtoan'  => $data['tien_thanhtoan'] ,
-                'tien_con' => $data['tien_con'] ,
-                'ghi_chu' => $data['ghi_chu'] ,
-            ]);
-
-            //  dd($data);
-            $phieuthu->save();
-        }
-        else{
-            return response()->json([
-                'success'=>1,
-                'message'=>$data
-            ]);
-        }
+                //Tạo phiếu Thu
 
 
-            // $ls_details = json_decode($data['details'], true);
-            // foreach ($ls_details as $vat_tu) {
-            //     $detail= new PhieuThuDetail([
-            //         'phieu_thu_id'=>$phieuthu->id,
-            //         'content'=> $vat_tu,
-            //     ]);
-            //     $detail->save();
-            // }
+                $phieuthu = new PhieuThu([
+                    'ma_phieuthu' => $data['ma_phieuthu'],
+                    'khach_hang_id'=> $khach_hang_id,
+                    'tien_thanhtoan'  => $data['tien_thanhtoan'] ,
+                    'tien_con' => $data['tien_con'] ,
+                    'ghi_chu' => '' ,
+                ]);
+                $phieuthu->save();
+
+
+
+
+                $ls_details = json_decode($data['vat_tu_goi'], true);
+                if($ls_details){
+
+                foreach ($ls_details as $vat_tu) {
+
+                    if($vat_tu['ten_goi'] == 'Gói điều trị'){
+                        $goi= GoiDieuTri::where('id', $vat_tu['id'])->first();
+
+                        if($goi){
+                            $goi_dt_khach = new GoiDieuTriKhach([
+                                'khach_hang_id' => $khach_hang_id,
+                                'goi_dt_id'=>$vat_tu['id'],
+                                'sl_buoi' =>$goi->so_buoi,
+                            ]);
+                            $goi_dt_khach->save();
+                        }
+                    }
+
+
+
+                    $detail= new PhieuThuDetail([
+                        'phieu_thu_id'=>$phieuthu->id,
+                        'tieu_de'=>$vat_tu['ten_goi'],
+                        'content'=>$vat_tu['ten'],
+                        'gia_tien'=>$vat_tu['thanh_tien'],
+                        'soluong_goi'=>$vat_tu['soluong_goi'],
+                    ]);
+                    $detail->save();
+                }
+            }
+            }
 
             DB::commit();
-        }catch (\Exception $e)
-        {
+        }
+        catch (\Exception $e){
             DB::rollBack();
             return response()->json([
                 'success'=>0,
@@ -214,8 +230,6 @@ class PhieuThuController extends AdminController
             'success'=>1,
             'message'=>'Thêm mới thành công'
         ]);
-
-
     }
     public function update($id)
     {

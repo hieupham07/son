@@ -4,7 +4,10 @@ namespace App\Admin\Controllers;
 
 use App\Models\GoiDieuTriKhach;
 use App\Models\KhachHang;
+use App\Models\KhachHangGoi;
+
 use App\Models\GoiDieuTri;
+
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -30,33 +33,35 @@ class GoiDieuTriKhachController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new GoiDieuTriKhach());
-        $trang_thai = [
-            1 => ['text' => 'Còn'],
-            0 => ['text' => 'Hết'],
-        ];
+
         $grid->quickSearch();
         $grid->id('ID')->sortable();
         $grid->column('khach_hang_id','Tên Khách Hàng')->display(function ($khach_hang_id) {
-            $khach=KhachHang::find($khach_hang_id);
+            $khach= KhachHang::find($khach_hang_id);
             if($khach) {
-                return $khach->ho_ten->filter('like');
+                return $khach->ho_ten;
             }
         });
         $grid->column('goi_dt_id','Gói điều trị')->display(function ($goi_dt_id) {
             $goi=GoiDieuTri::find($goi_dt_id);
             if($goi) {
-                return $goi->ten->filter('like');
+                return $goi->ten;
             }
         });
-        // $grid->khach_hang_id('Tên Khách Hàng')->filter('like');
-        // $grid->goi_dt_id('Gói Điều Trị')->filter('like');
-        $grid->trang_thai("Trạng Thái")->switch($trang_thai);
-        $grid->filter(function ($filter) {
-            // Remove the default id filter
-            $filter->disableIdFilter();
-            // Add a column filter
-            $filter->like('khach_hang_id', 'Tên Khách hàng');
+
+        $grid->column('goi_dieu_tri_id', "Điều trị")->display(function ($goi_dieu_tri_id) {
+            $dieu_tri=KhachHangGoi::find($goi_dieu_tri_id);
+            if($dieu_tri) {
+                return $dieu_tri->ten;
+            }
         });
+        $grid->so_buoi_con("Số Buổi Còn");
+        // $grid->filter(function ($filter) {
+        //     // Remove the default id filter
+        //     $filter->disableIdFilter();
+        //     // Add a column filter
+        //     $filter->like('khach_hang_id', 'Tên Khách hàng');
+        // });
         $grid->disableExport();
         return $grid;
     }
@@ -72,7 +77,8 @@ class GoiDieuTriKhachController extends AdminController
         $show = new Show(GoiDieuTriKhach::findOrFail($id));
         $show->khach_hang_id("Tên Khách Hàng");
         $show->goi_dt_id('Gói điều trị');
-        $show->trang_thai('Trạng Thái');
+        $show->goi_dieu_tri_id('Điều Trị');
+        $show->so_buoi_con('Số Buổi Còn');
         $show->created_at();
         $show->updated_at();
         return $show;
@@ -88,7 +94,8 @@ class GoiDieuTriKhachController extends AdminController
         $form = new Form(new GoiDieuTriKhach());
         $form->select('khach_hang_id','Tên Khách Hàng')->options(KhachHang::all()->pluck('ho_ten', 'id'));
         $form->select('goi_dt_id','Gói điều trị')->options(GoiDieuTri::all()->pluck('ten', 'id'));
-        $form->radio('trang_thai','Trạng Thái')->options([1 => 'Còn', 0=> 'Hết'])->default(1);
+        $form->select('goi_dieu_tri_id','Gói điều trị')->options(KhachHangGoi::all()->pluck('ten', 'id'));
+        $form->text('so_buoi_con',"Số Buổi còn lại");
         $form->display('created_at', 'Created At');
         $form->display('updated_at', 'Updated At');
         return $form;

@@ -17,7 +17,10 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('phieu_thu_id')->nullable();
             $table->foreign('phieu_thu_id')->references('id')->on('phieu_thus')->onDelete('cascade')->onUpdate('cascade');
-            $table->text('content');
+            $table->string('tieu_de')->nullable();
+            $table->string('content')->nullable();
+            $table->decimal('gia_tien',18,0)->nullable();
+            $table->smallInteger('soluong_goi')->nullable();
             $table->timestamps();
         });
     }

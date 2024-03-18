@@ -3,10 +3,16 @@
 namespace App\Admin\Controllers;
 
 use App\Models\KhachDieuTri;
+use App\Models\KhachHang;
+use App\Models\GoiDieuTri;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KhachDieuTriController extends AdminController
 {

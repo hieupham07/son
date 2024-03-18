@@ -10,16 +10,21 @@ class GoiDieuTriKhach extends Model
     // use HasFactory;
     protected $table = 'goi_dieu_tri_khaches';
     protected $fillable = [
-        'khach_hang_id ',
-        'goi_dt_id ',
-        'trang_thai',
+        'khach_hang_id',
+        'goi_dt_id',
+        'sl_buoi',
     ];
     public function khachhang()
     {
-        return $this->belongsTo(KhachHang::class,'khach_hang_id');
+        return $this->hasMany(KhachHang::class,'khach_hang_id');
     }
     public function goidieutri()
     {
-        return $this->belongsTo(GoiDieuTri::class,'goi_dt_id');
+        return $this->hasMany(GoiDieuTri::class,'goi_dt_id');
     }
+    public function dieutri()
+    {
+        return $this->hasMany(KhachHangGoi::class,'goi_dieu_tri_id');
+    }
+
 }

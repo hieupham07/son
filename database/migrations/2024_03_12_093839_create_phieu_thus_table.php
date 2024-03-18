@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('phieu_thus', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('ma_phieuthu')->nullable();
+            $table->string('ma_phieuthu')->nullable();
             $table->unsignedInteger('khach_hang_id')->nullable();
             $table->foreign('khach_hang_id')->references('id')->on('khach_hangs')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('goi_id')->nullable();
