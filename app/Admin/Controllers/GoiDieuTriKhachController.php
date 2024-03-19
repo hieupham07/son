@@ -49,13 +49,8 @@ class GoiDieuTriKhachController extends AdminController
             }
         });
 
-        $grid->column('goi_dieu_tri_id', "Điều trị")->display(function ($goi_dieu_tri_id) {
-            $dieu_tri=KhachHangGoi::find($goi_dieu_tri_id);
-            if($dieu_tri) {
-                return $dieu_tri->ten;
-            }
-        });
-        $grid->so_buoi_con("Số Buổi Còn");
+
+        $grid->sl_buoi("Số Buổi Còn");
         // $grid->filter(function ($filter) {
         //     // Remove the default id filter
         //     $filter->disableIdFilter();
@@ -77,8 +72,8 @@ class GoiDieuTriKhachController extends AdminController
         $show = new Show(GoiDieuTriKhach::findOrFail($id));
         $show->khach_hang_id("Tên Khách Hàng");
         $show->goi_dt_id('Gói điều trị');
-        $show->goi_dieu_tri_id('Điều Trị');
-        $show->so_buoi_con('Số Buổi Còn');
+
+        $show->sl_buoi('Số Buổi Còn');
         $show->created_at();
         $show->updated_at();
         return $show;
@@ -94,8 +89,8 @@ class GoiDieuTriKhachController extends AdminController
         $form = new Form(new GoiDieuTriKhach());
         $form->select('khach_hang_id','Tên Khách Hàng')->options(KhachHang::all()->pluck('ho_ten', 'id'));
         $form->select('goi_dt_id','Gói điều trị')->options(GoiDieuTri::all()->pluck('ten', 'id'));
-        $form->select('goi_dieu_tri_id','Gói điều trị')->options(KhachHangGoi::all()->pluck('ten', 'id'));
-        $form->text('so_buoi_con',"Số Buổi còn lại");
+
+        $form->text('sl_buoi',"Số Buổi còn lại");
         $form->display('created_at', 'Created At');
         $form->display('updated_at', 'Updated At');
         return $form;
