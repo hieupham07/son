@@ -86,7 +86,8 @@
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-pencil fa-fw"></i></span>
-                                <input required="1" type="text" id="ma_phieuthu" name="ma_phieuthu" value="" class="form-control ten" placeholder="Input mã khách hàng">
+                                <?php $ma_pt = 'THU'.date('ymdHi'); ?>
+                                <input required="1" type="text" id="ma_phieuthu" name="ma_phieuthu" value="{{$ma_pt}}" class="form-control ten" placeholder="Input mã khách hàng">
                             </div>
                         </div>
                     </div>
@@ -481,6 +482,7 @@
 
 
     $("#create-order-form").submit(function (e) {
+        $(this).attr( 'disabled', 'disabled' ).css({"opacity": "0.5"});
         e.preventDefault();
         let url = $(this).attr('action');
         var data = $(this).serialize();
@@ -496,8 +498,10 @@
                 console.log(result);
                 if (result.success == 1) {
                     toastr.success(result.message);
+
                 } else {
                     toastr.error(result.message);
+                    $(this).removeAttr('disabled').css({"opacity": "1"});
                 }
             },
         });

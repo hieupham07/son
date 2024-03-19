@@ -13,7 +13,6 @@ class PhieuThu extends Model
     protected $fillable = [
         'ma_phieuthu',
         'khach_hang_id',
-
         'tien_thanhtoan',
         'tien_con',
         'ghi_chu',
@@ -21,8 +20,13 @@ class PhieuThu extends Model
 
     public function details()
     {
-        return $this->hasMany(PhieuThuDetail::class, 'phieu_id');
+        return $this->hasMany(PhieuThuDetail::class, 'phieu_thu_id');
     }
+    public function khachang()
+    {
+        return $this->hasOne(KhachHang::class, 'khach_hang_id');
+    }
+
     // public function goi_dt()
     // {
     //     return $this->hasMany(GoiDieuTri::class, 'goi_id');

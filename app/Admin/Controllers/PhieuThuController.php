@@ -112,10 +112,11 @@ class PhieuThuController extends AdminController
     {
         // $users=AdminUser::where('enable',true)->get();
         $order= PhieuThu::with(['details','phieuthu'])->find($id);
+        $khach_hang = KhachHang::where('id', $order->khach_hang_id)->first();
         $ls_khach= KhachHang::all();
         $ls_goi_dt = GoiDieuTri::all();
         $ls_thuoc = Thuoc::all();
-        return Admin::component('admin::phieuthu.edit', compact('order','ls_khach','ls_goi_dt','ls_thuoc'));
+        return Admin::component('admin::phieuthu.edit', compact('order','ls_khach','ls_goi_dt','ls_thuoc','khach_hang'));
     }
     public function create(Content $content)
     {
@@ -201,9 +202,6 @@ class PhieuThuController extends AdminController
                             $goi_dt_khach->save();
                         }
                     }
-
-
-
                     $detail= new PhieuThuDetail([
                         'phieu_thu_id'=>$phieuthu->id,
                         'tieu_de'=>$vat_tu['ten_goi'],
