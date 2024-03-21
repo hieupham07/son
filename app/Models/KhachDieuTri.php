@@ -20,6 +20,15 @@ class KhachDieuTri extends Model
     {
         return $this->belongsTo(KhachHang::class,'khach_hang_id');
     }
+    public function khachdt()
+    {
+        return $this->hasOne(KhachHangGoi::class,'goi_dieu_tri_id');
+    }
+    public function goi_dt_cua_khach()
+    {
+        return $this->hasMany(GoiDieuTriKhach::class,'khach_hang_id');
+    }
+
     public function goidieutri()
     {
         return $this->belongsTo(GoiDieuTri::class,'goi_d_t_id');

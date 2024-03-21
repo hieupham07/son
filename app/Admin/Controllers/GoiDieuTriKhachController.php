@@ -5,7 +5,7 @@ namespace App\Admin\Controllers;
 use App\Models\GoiDieuTriKhach;
 use App\Models\KhachHang;
 use App\Models\KhachHangGoi;
-
+use App\Models\KhachDieuTri;;
 use App\Models\GoiDieuTri;
 
 use Encore\Admin\Controllers\AdminController;

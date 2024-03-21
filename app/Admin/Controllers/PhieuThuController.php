@@ -170,7 +170,6 @@ class PhieuThuController extends AdminController
                 }
             }
             if($khach_hang_id != ''){
-                //Tạo phiếu Thu
 
 
                 $phieuthu = new PhieuThu([
@@ -181,37 +180,33 @@ class PhieuThuController extends AdminController
                     'ghi_chu' => '' ,
                 ]);
                 $phieuthu->save();
-
-
-
-
                 $ls_details = json_decode($data['vat_tu_goi'], true);
                 if($ls_details){
 
-                foreach ($ls_details as $vat_tu) {
+                    foreach ($ls_details as $vat_tu) {
 
-                    if($vat_tu['ten_goi'] == 'Gói điều trị'){
-                        $goi= GoiDieuTri::where('id', $vat_tu['id'])->first();
+                        if($vat_tu['ten_goi'] == 'Gói điều trị'){
+                            $goi= GoiDieuTri::where('id', $vat_tu['id'])->first();
 
-                        if($goi){
-                            $goi_dt_khach = new GoiDieuTriKhach([
-                                'khach_hang_id' => $khach_hang_id,
-                                'goi_dt_id'=>$vat_tu['id'],
-                                'sl_buoi' =>$goi->so_buoi,
-                            ]);
-                            $goi_dt_khach->save();
+                            if($goi){
+                                $goi_dt_khach = new GoiDieuTriKhach([
+                                    'khach_hang_id' => $khach_hang_id,
+                                    'goi_dt_id'=>$vat_tu['id'],
+                                    'sl_buoi' =>$goi->so_buoi,
+                                ]);
+                                $goi_dt_khach->save();
+                            }
                         }
+                        $detail= new PhieuThuDetail([
+                            'phieu_thu_id'=>$phieuthu->id,
+                            'tieu_de'=>$vat_tu['ten_goi'],
+                            'content'=>$vat_tu['ten'],
+                            'gia_tien'=>$vat_tu['thanh_tien'],
+                            'soluong_goi'=>$vat_tu['soluong_goi'],
+                        ]);
+                        $detail->save();
                     }
-                    $detail= new PhieuThuDetail([
-                        'phieu_thu_id'=>$phieuthu->id,
-                        'tieu_de'=>$vat_tu['ten_goi'],
-                        'content'=>$vat_tu['ten'],
-                        'gia_tien'=>$vat_tu['thanh_tien'],
-                        'soluong_goi'=>$vat_tu['soluong_goi'],
-                    ]);
-                    $detail->save();
                 }
-            }
             }
 
             DB::commit();

@@ -134,7 +134,6 @@ class GoiDieuTriController extends AdminController
             //Tạo gới trang bị
             $goidieutri=GoiDieuTri::find($id);
             $goidieutri->fill([
-
             'ten'=>$data['ten'],
             'mo_ta'=>$data['mo_ta'],
             'gia'=>$data['gia'],

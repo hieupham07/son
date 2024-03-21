@@ -574,14 +574,6 @@
         $('#ho_ten').val(khach_ten);
         $('#dien_thoai').val(khach_dt);
         $('#dia_chi').val(khach_dc);
-        $('#bang_ten_khach').fadeOut();
     });
-    $('#tien_thanhtoan').on('change' ,function() {
-        let tien_tt = $(this).val().trim();
-        let tien_c = tong_tien_thu - tien_tt;
-        $('#tien_con').val(tien_c);
-    });
-    $('#bang_dienthoai .close').click(function(){
-        $('#bang_dienthoai').fadeOut();
-    });
+
 </script>
