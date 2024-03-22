@@ -40,13 +40,13 @@ class KhachDieuTriController extends AdminController
         $grid->column('khach_hang_id','Tên Khách Hàng')->display(function ($khach_hang_id) {
             $khach=KhachHang::find($khach_hang_id);
             if($khach) {
-                return $khach->ho_ten->filter('like');
+                return $khach->ho_ten;
             }
         });
-        $grid->column('goi_dt_id','Gói điều trị')->display(function ($goi_dt_id) {
+        $grid->column('goi_d_t_id','Gói điều trị')->display(function ($goi_dt_id) {
             $goi=GoiDieuTri::find($goi_dt_id);
             if($goi) {
-                return $goi->ten->filter('like');
+                return $goi->ten;
             }
         });
         $grid->column('goi_dieu_tri_id','Điều trị')->display(function ($khachdt) {
@@ -132,17 +132,14 @@ class KhachDieuTriController extends AdminController
             $goidieutri->fill([
                 'sl_buoi'=>$sl_buoi_con,
             ]);
-            // $goidieutri->save();
+            $goidieutri->save();
             $khachdieutri = new KhachDieuTri([
                 'khach_hang_id'=>$data['khach_id'],
                 'goi_d_t_id'=>$goidieutri->goi_dt_id,
                 'goi_dieu_tri_id'=>$data['dieutri'],
                 'so_buoi_con'=>$sl_buoi_con,
             ]);
-            return response()->json([
-                'success'=>1,
-                'message'=>$khachdieutri
-            ]);
+            $khachdieutri->save();
             DB::commit();
         }
         catch (\Exception $e){

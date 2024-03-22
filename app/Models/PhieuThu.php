@@ -16,6 +16,8 @@ class PhieuThu extends Model
         'tien_thanhtoan',
         'tien_con',
         'ghi_chu',
+        'ngay_lap',
+        'gio_lap',
     ];
 
     public function details()

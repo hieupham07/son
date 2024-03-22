@@ -29,5 +29,7 @@ Route::group([
     $router->resource('phieu_thu_details', PhieuThuDetailController::class);
     $router->post('dieu-tri/{id}','KhachDieuTriController@themdieutri');
     $router->get('dieu-tri/{id}','KhachDieuTriController@dieutri');
+    $router->resource('bao-caos', BaoCaoController::class);
+    $router->get('baocao/tuan','BaoCaoController@viewtuan');
     // $router->resource('dieu-tris', DieuTriController::class);
 });

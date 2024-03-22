@@ -37,6 +37,15 @@ class PhieuThuController extends AdminController
     {
         $grid = new Grid(new PhieuThu());
         $grid->quickSearch();
+        $grid->column('created_at','Ngày')->display(function ($ngay) {
+            // return date_format($ngay,'d-m-Y');
+            return date('d-m-Y', strtotime($ngay));
+        });
+        $grid->column('created_at','Giờ');
+        // $grid->column('created_at','Giờ')->display(function ($gio) {
+        //     // return date_format($ngay,'d-m-Y');
+        //     return date('H:i', strtotime($gio));
+        // });
         // $grid->id('ID')->sortable();
         $grid->ma_phieuthu('Mã Phiếu Thu')->filter('like');
 
@@ -52,15 +61,23 @@ class PhieuThuController extends AdminController
                 return $goi_dt->ten;
             }
         });
-        $grid->tien_thanhtoan("Số tiền thanh Toán");
+        $grid->column('tien_thanhtoan',"Số tiền thanh Toán")->display(function ($tien_thanhtoan) {
+            return number_format($tien_thanhtoan);
+        })->totalRow(function ($amount) {
+
+            return number_format($amount);
+
+        });
         $grid->tien_con("Số tiền Còn");
         $grid->filter(function ($filter) {
             // Remove the default id filter
             $filter->disableIdFilter();
+            $filter->between('created_at','Từ Ngày-> Đến Ngày')->date();
             // Add a column filter
             $filter->like('khach_hang_id', 'Tên Khách Hàng');
         });
-        $grid->disableExport();
+        // $grid->disableExport();
+        $grid->model()->orderBy('created_at', 'desc');
         return $grid;
     }
 
@@ -170,7 +187,7 @@ class PhieuThuController extends AdminController
                 }
             }
             if($khach_hang_id != ''){
-
+                $ngay = date('Y-m-d H:i:s');
 
                 $phieuthu = new PhieuThu([
                     'ma_phieuthu' => $data['ma_phieuthu'],
